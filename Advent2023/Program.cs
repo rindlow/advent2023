@@ -54,6 +54,10 @@ class Program
                 new Lazy<string>(() => Day1_Trebuchet.SumCalibrationValues("input/day1.txt").ToString()),
                 new Lazy<string>(() => Day1_Trebuchet.SumCalibrationValues("input/day1.txt").ToString()),
                 new Lazy<string>(() => Day1_Trebuchet.SumCalibrationValuesWithText("input/day1.txt").ToString())),
+            new(2,
+                new Lazy<string>(() => Day2_CubeConundrum.SumPossibleGames("input/day2.txt", 12, 13, 14).ToString()),
+                new Lazy<string>(() => Day2_CubeConundrum.SumPossibleGames("input/day2.txt", 12, 13, 14).ToString()),
+                new Lazy<string>(() => Day2_CubeConundrum.SumPowers("input/day2.txt").ToString())),
         };
 
 
