@@ -58,6 +58,10 @@ class Program
                 new Lazy<string>(() => Day2_CubeConundrum.SumPossibleGames("input/day2.txt", 12, 13, 14).ToString()),
                 new Lazy<string>(() => Day2_CubeConundrum.SumPossibleGames("input/day2.txt", 12, 13, 14).ToString()),
                 new Lazy<string>(() => Day2_CubeConundrum.SumPowers("input/day2.txt").ToString())),
+            new(3,
+                new Lazy<string>(() => Day3_GearRatios.SumOfPartNumbers("input/day3.txt").ToString()),
+                new Lazy<string>(() => Day3_GearRatios.SumOfPartNumbers("input/day3.txt").ToString()),
+                new Lazy<string>(() => Day3_GearRatios.SumOfGearRatios("input/day3.txt").ToString())),
         };
 
 
