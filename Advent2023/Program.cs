@@ -48,7 +48,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        Console.WriteLine("Advent 2020\n");
+        Console.WriteLine("Advent 2023\n");
         Day[] Days = {
             new(1,
                 new Lazy<string>(() => Day1_Trebuchet.SumCalibrationValues("input/day1.txt").ToString()),
