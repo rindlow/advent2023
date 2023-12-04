@@ -1,126 +1,104 @@
-using System.ComponentModel.Design.Serialization;
-using System.Reflection.Metadata.Ecma335;
-
 namespace Advent2023;
 
-public static class Day3_GearRatios
+public class Schematics
 {
-    private static bool IsSymbol(char c) => c != '.' && (c < '0' || c > '9');
-    private static bool FindSymbol(string[] lines, int row, int col, int numberLen) {
-        if (row > 0) {
-            if (lines[row - 1][Math.Max(0, col - numberLen - 1)..Math.Min(lines[row - 1].Length, col + 1)]
-                .Any(IsSymbol)) {
-                return true;
-            }
-        }
-        if (col - numberLen > 0 && IsSymbol(lines[row][col - numberLen - 1])) {
-            return true;
-        }
-        if (col < lines[row].Length && IsSymbol(lines[row][col])) {
-            return true;
-        }
-        if (row < lines.Length - 1) {
-            if (lines[row + 1][Math.Max(0, col - numberLen - 1)..Math.Min(lines[row + 1].Length, col + 1)]
-                .Any(IsSymbol)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public static int SumOfPartNumbers(string filename) {
-        string[] lines = [.. File.ReadAllLines(filename)];
-        int sum = 0;
-        for (int row = 0; row < lines.Length; row++) {
+    public readonly List<int> PartNumbers;
+    public readonly Dictionary<(int, int), List<int>> Gears;
+    readonly string[] lines;
+    readonly int nCols = 0;
+    readonly int nRows = 0;
+    public Schematics(string filename)
+    {
+        PartNumbers = [];
+        Gears = [];
+        lines = [.. File.ReadAllLines(filename)];
+        nRows = lines.Length;
+        nCols = lines[0].Length;
+        for (int row = 0; row < nRows; row++) {
             int number = 0;
             int numberLen = 0;
-            for (int col = 0; col < lines[row].Length; col++) {
+            for (int col = 0; col < nCols; col++) {
                 char c = lines[row][col];
                 if (c >= '0' && c <= '9') {
                     number *= 10;
                     number += c - '0';
                     numberLen++;
-                } else if (numberLen > 0 && FindSymbol(lines, row, col, numberLen)) {
-                    sum += number;
-                    number = 0;
-                    numberLen = 0;
                 } else {
-                    number = 0;
-                    numberLen = 0;
-                }
-            }
-            if (numberLen > 0 && FindSymbol(lines, row, lines[row].Length, numberLen)) {
-                sum += number;
-                number = 0;
-                numberLen = 0;
-            }
-        }
-        return sum;
-    }
-    private static (int, int) FindGear(string[] lines, int row, int col, int numberLen) {
-        if (row > 0) {
-            for (int i = Math.Max(0, col - numberLen - 1); i < Math.Min(lines[row - 1].Length, col + 1); i++) {
-                if (lines[row - 1][i] == '*') {
-                    return (row - 1, i);
-                }
-            }
-        }
-        if (col - numberLen > 0 && lines[row][col - numberLen - 1] == '*') {
-            return (row, col - numberLen - 1);
-        }
-        if (col < lines[row].Length && lines[row][col] == '*') {
-            return (row, col);
-        }
-        if (row < lines.Length - 1) {
-            for (int i = Math.Max(0, col - numberLen - 1); i < Math.Min(lines[row + 1].Length, col + 1); i++) {
-                if (lines[row + 1][i] == '*') {
-                    return (row + 1, i);
-                }
-            }
-        }
-        return (-1, -1);
-    }
-    public static int SumOfGearRatios(string filename) {
-        string[] lines = [.. File.ReadAllLines(filename)];
-        Dictionary<(int, int), List<int>> gears = [];
-        for (int row = 0; row < lines.Length; row++) {
-            int number = 0;
-            int numberLen = 0;
-            for (int col = 0; col < lines[row].Length; col++) {
-                char c = lines[row][col];
-                if (c >= '0' && c <= '9') {
-                    number *= 10;
-                    number += c - '0';
-                    numberLen++;
-                } else if (numberLen > 0) {
-                    var pos = FindGear(lines, row, col, numberLen);
-                    if (pos.Item1 >= 0) {
-                        if (gears.TryGetValue(pos, out List<int>? value)) {
-                            value.Add(number);
-                        } else {
-                            gears.Add(pos, [number]);
-                        }
+                    if (numberLen > 0 && Neighbours(row, col - numberLen, numberLen, number).Any(IsSymbol)) {
+                        PartNumbers.Add(number);
                     }
-                    number = 0;
-                    numberLen = 0;
-                } else {
                     number = 0;
                     numberLen = 0;
                 }
             }
             if (numberLen > 0) {
-                int col = lines[row].Length;
-                var pos = FindGear(lines, row, col, numberLen);
-                if (pos.Item1 >= 0) {
-                    if (gears.TryGetValue(pos, out List<int>? value)) {
-                        value.Add(number);
-                    } else {
-                        gears.Add(pos, [number]);
-                    }
-                    number = 0;
-                    numberLen = 0;
+                if (Neighbours(row, nCols - numberLen, numberLen, number).Any(IsSymbol)) {
+                    PartNumbers.Add(number);
+                }
+                number = 0;
+                numberLen = 0;
+            }
+        }
+    }
+    private static bool IsSymbol(char c) => c != '.' && (c < '0' || c > '9');
+
+    private void AddGear(int row, int col, int number) {
+        if (Gears.TryGetValue((row, col), out List<int>? value)) {
+            value.Add(number);
+        } else {
+            Gears.Add((row, col), [number]);
+        }
+    }
+    private string Neighbours(int row, int startcol, int len, int number) {
+        string res = "";
+        int start = Math.Max(0, startcol - 1);
+        int end = Math.Min(nCols - 1, startcol + len);
+        if (row > 0) {
+            for (int col = start; col <= end; col++) {
+                char c = lines[row - 1][col];
+                res += c;
+                if (c == '*') {
+                    AddGear(row - 1, col, number);
                 }
             }
         }
-        return (from gear in gears where gear.Value.Count == 2 select gear.Value[0] * gear.Value[1]).Sum();
+        if (startcol > 0) {
+            char c = lines[row][start];
+            res += c;
+            if (c == '*') {
+                AddGear(row, start, number);
+            }
+        }
+        if (end < nCols - 1) {
+            char c = lines[row][end];
+            res += c;
+            if (c == '*') {
+                AddGear(row, end, number);
+            }
+        }
+        if (row < nRows - 1) {
+            for (int col = start; col <= end; col++) {
+                char c = lines[row + 1][col];
+                res += c;
+                if (c == '*') {
+                    AddGear(row + 1, col, number);
+                }        
+            }
+        }
+        return res;
+    }
+}
+
+public static class Day3_GearRatios
+{
+    public static int SumOfPartNumbers(string filename) {
+        Schematics schematics = new(filename);
+        return schematics.PartNumbers.Sum();
+    }
+    public static int SumOfGearRatios(string filename) {
+        Schematics schematics = new(filename);
+        return (from gear in schematics.Gears
+                where gear.Value.Count == 2 
+                select gear.Value[0] * gear.Value[1]).Sum();
     }
 }
