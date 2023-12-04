@@ -62,6 +62,10 @@ class Program
                 new Lazy<string>(() => Day3_GearRatios.SumOfPartNumbers("input/day3.txt").ToString()),
                 new Lazy<string>(() => Day3_GearRatios.SumOfPartNumbers("input/day3.txt").ToString()),
                 new Lazy<string>(() => Day3_GearRatios.SumOfGearRatios("input/day3.txt").ToString())),
+            new(4,
+                new Lazy<string>(() => Day4_Scratchcards.SumPoints("input/day4.txt").ToString()),
+                new Lazy<string>(() => Day4_Scratchcards.SumPoints("input/day4.txt").ToString()),
+                new Lazy<string>(() => Day4_Scratchcards.NumberOfCards("input/day4.txt").ToString())),                
         };
 
 
