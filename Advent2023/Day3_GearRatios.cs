@@ -92,12 +92,10 @@ public class Schematics
 public static class Day3_GearRatios
 {
     public static int SumOfPartNumbers(string filename) {
-        Schematics schematics = new(filename);
-        return schematics.PartNumbers.Sum();
+        return new Schematics(filename).PartNumbers.Sum();
     }
     public static int SumOfGearRatios(string filename) {
-        Schematics schematics = new(filename);
-        return (from gear in schematics.Gears
+        return (from gear in new Schematics(filename).Gears
                 where gear.Value.Count == 2 
                 select gear.Value[0] * gear.Value[1]).Sum();
     }
