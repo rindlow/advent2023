@@ -2,44 +2,39 @@ using System.Diagnostics;
 
 namespace Advent2023;
 
-public class Day
+public class Day(int no, Lazy<string> preload, Lazy<string> part1, Lazy<string> part2)
 {
-    protected Lazy<string> Preload { get; set; }
-    protected Lazy<string> Part1 { get; set; }
-    protected Lazy<string> Part2 { get; set; }
+    protected Lazy<string> Preload { get; set; } = preload;
+    protected Lazy<string> Part1 { get; set; } = part1;
+    protected Lazy<string> Part2 { get; set; } = part2;
 
-    protected int No;
+    protected int No = no;
+    public TimeSpan TotalTime = TimeSpan.Zero;
 
-    public Day(int no, Lazy<string>preload, Lazy<string>part1, Lazy<string>part2)
-    {
-        this.No = no;
-        this.Part1 = part1;
-        this.Part2 = part2;
-        this.Preload = preload;
-    }
-
-    private string FormatTime(Stopwatch stopwatch) {
-        if (stopwatch.ElapsedMilliseconds > 0) {
-           return $"{stopwatch.ElapsedMilliseconds} ms";
+    public static string FormatTime(TimeSpan elapsed) {
+        if (elapsed.TotalMilliseconds > 1) {
+           return $"{elapsed.TotalMilliseconds:F1} ms";
         } else {
-            return $"{stopwatch.Elapsed.TotalMicroseconds} µs";
+            return $"{elapsed.TotalMicroseconds:F0} µs";
         }
     }
 
     public void Print()
     {
-        Console.WriteLine($"* Day {this.No}");
-        this.Preload.Value.ToString();
+        Console.WriteLine($"* Day {No}");
+        Preload.Value.ToString();
         Stopwatch stopwatch = new();
         stopwatch.Start();
-        Console.WriteLine($"  Part 1: {this.Part1.Value}");
+        Console.WriteLine($"  Part 1: {Part1.Value}");
         stopwatch.Stop();
-        Console.WriteLine($"    Finished in {FormatTime(stopwatch)}");
+        TotalTime += stopwatch.Elapsed;
+        Console.WriteLine($"    Finished in {FormatTime(stopwatch.Elapsed)}");
         stopwatch.Reset();
         stopwatch.Start();
-        Console.WriteLine($"  Part 2: {this.Part2.Value}");
+        Console.WriteLine($"  Part 2: {Part2.Value}");
         stopwatch.Stop();
-        Console.WriteLine($"    Finished in {FormatTime(stopwatch)}"); 
+        TotalTime += stopwatch.Elapsed;
+        Console.WriteLine($"    Finished in {FormatTime(stopwatch.Elapsed)}"); 
         Console.WriteLine();    
     }
 }
@@ -65,9 +60,12 @@ class Program
             new(4,
                 new Lazy<string>(() => Day4_Scratchcards.SumPoints("input/day4.txt").ToString()),
                 new Lazy<string>(() => Day4_Scratchcards.SumPoints("input/day4.txt").ToString()),
-                new Lazy<string>(() => Day4_Scratchcards.NumberOfCards("input/day4.txt").ToString())),                
+                new Lazy<string>(() => Day4_Scratchcards.NumberOfCards("input/day4.txt").ToString())),     
+            new(5,
+                new Lazy<string>(() => Day5_IfYouGiveASeedAFertilizer.LowestLocationNumber("input/day5.txt").ToString()),
+                new Lazy<string>(() => Day5_IfYouGiveASeedAFertilizer.LowestLocationNumber("input/day5.txt").ToString()),
+                new Lazy<string>(() => Day5_IfYouGiveASeedAFertilizer.LowestLocationNumberRange("input/day5.txt").ToString())),
         };
-
 
         string[] argv = System.Environment.GetCommandLineArgs();
         if (argv.Length < 2)
@@ -87,5 +85,10 @@ class Program
                 }
             }
         }
+        TimeSpan totalTime = TimeSpan.Zero;
+        foreach (Day day in Days) {
+            totalTime += day.TotalTime;
+        }
+        Console.WriteLine($"Total time: {Day.FormatTime(totalTime)}");
     }
 }
