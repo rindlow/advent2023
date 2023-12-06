@@ -7,7 +7,7 @@ public class Day3_GearRatios_Test
     [InlineData("day3.txt", 527144)]
     public void TestPart1(string filename, int expected)
     {
-        Assert.Equal(expected, Day3_GearRatios.SumOfPartNumbers(filename));
+        Assert.Equal(expected, Day3GearRatios.SumOfPartNumbers(filename));
     }
 
     [Theory]
@@ -15,7 +15,7 @@ public class Day3_GearRatios_Test
     [InlineData("day3.txt", 81463996)]
     public void TestPart2(string filename, int expected)
     {
-        Assert.Equal(expected, Day3_GearRatios.SumOfGearRatios(filename));
+        Assert.Equal(expected, Day3GearRatios.SumOfGearRatios(filename));
     }
 
 }

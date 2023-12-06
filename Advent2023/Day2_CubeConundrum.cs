@@ -51,7 +51,7 @@ class Game
             * subSets.Select(x => x.blueCubes).Max();
     }
 }
-public static class Day2_CubeConundrum
+public static class Day2CubeConundrum
 {
     private static IEnumerable<Game> ReadFile(string filename) =>
         from line in File.ReadAllLines(filename) select (new Game(line));

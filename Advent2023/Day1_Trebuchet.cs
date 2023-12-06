@@ -2,7 +2,7 @@ namespace Advent2023;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-public static class Day1_Trebuchet
+public static class Day1Trebuchet
 {
     private static readonly Regex pattern = new("^[0-9]|one|t(wo|hree)|f(our|ive)|s(ix|even)|eight|nine");
     private static int CalibrationValue(string line)

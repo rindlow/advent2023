@@ -1,8 +1,10 @@
 namespace Advent2023;
 public class Range
 {
-    public Int64 Start;
-    public Int64 Length;
+    public Int64 Start
+    { get; set; }
+    public Int64 Length
+    { get; set; }
     public Range Overlap(Range other)
     {
         if (Start <= other.Start && other.Start < Start + Length)
@@ -45,8 +47,11 @@ public class Range
 }
 public class SeedMapEntry
 {
-    public readonly Int64 DestinationStart;
-    public readonly Range Source;
+    public Int64 DestinationStart
+    { get; }
+    public Range Source
+    { get; }
+
     public SeedMapEntry(string line)
     {
         var numbers = line.Split(' ');
@@ -56,22 +61,24 @@ public class SeedMapEntry
 }
 public class SeedMap
 {
-    public readonly string Source;
-    public readonly string Destination;
-    public readonly IEnumerable<SeedMapEntry> Entries;
+    public string Source
+    { get; }
+    public string Destination
+    { get; }
+    private readonly IEnumerable<SeedMapEntry> entries;
     public SeedMap(string[] lines)
     {
         string[] header = lines[0][..^5].Split('-');
         Source = header[0];
         Destination = header[2];
-        Entries = from line in lines[1..] select new SeedMapEntry(line);
+        entries = from line in lines[1..] select new SeedMapEntry(line);
     }
     private Ranges MapEntries(Range inRange)
     {
         Ranges mapped = new([]);
         Ranges ranges = new([]);
         ranges.Add(inRange);
-        foreach (SeedMapEntry entry in Entries)
+        foreach (SeedMapEntry entry in entries)
         {
             Ranges unmapped = new([]);
             foreach (Range range in ranges.ranges)
@@ -114,7 +121,8 @@ public class SeedMap
 
 public class Ranges
 {
-    public List<Range> ranges;
+    public List<Range> ranges
+    { get; }
     public Ranges(IEnumerable<Range> initial)
     {
         ranges = initial.ToList();
@@ -170,7 +178,7 @@ class Almanac
                 return new Having() { Number = map.Map(having.Number), Kind = map.Destination };
             }
         }
-        throw new Exception($"Unknown map source '{having.Kind}'");
+        throw new KeyNotFoundException($"Unknown map source '{having.Kind}'");
     }
     public Ranges SeedsToLocations(Having current)
     {
@@ -198,7 +206,7 @@ class Almanac
         return new() { Number = ranges, Kind = "seed" };
     }
 }
-public static class Day5_IfYouGiveASeedAFertilizer
+public static class Day5IfYouGiveASeedAFertilizer
 {
     public static Int64 LowestLocationNumber(string filename)
     {

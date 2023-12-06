@@ -1,10 +1,15 @@
 namespace Advent2023;
 public class Scratchcard
 {
-    public readonly int Number;
-    public readonly IEnumerable<int> Winning;
-    public readonly IEnumerable<int> Having;
-    public readonly int WinningNumbers;
+    public int Number
+    { get; }
+    public IEnumerable<int> Winning
+    { get; }
+    public IEnumerable<int> Having
+    { get; }
+    public int WinningNumbers
+    { get; }
+
     public Scratchcard(string card)
     {
         var colonSplit = card.Split(':');
@@ -22,7 +27,7 @@ public class Scratchcard
         return (int)Math.Pow(2, WinningNumbers - 1);
     }
 }
-public static class Day4_Scratchcards
+public static class Day4Scratchcards
 {
     public static int SumPoints(string filename)
     {

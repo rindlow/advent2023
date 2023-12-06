@@ -32,7 +32,7 @@ class Race(int duration, Int64 record)
         return end - start;
     }
 }
-public static class Day6_WaitForIt
+public static class Day6WaitForIt
 {
     public static int ProductOfNumberOfWays(string filename)
     {

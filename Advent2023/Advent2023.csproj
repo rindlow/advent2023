@@ -10,4 +10,8 @@
   <PropertyGroup>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <AnalysisMode>Recommended</AnalysisMode>
+  </PropertyGroup>
 </Project>

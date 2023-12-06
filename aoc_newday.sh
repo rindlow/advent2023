@@ -5,7 +5,7 @@ if [ $# -lt 2 ]; then
     exit 1
 fi
 Project="Advent2023"
-Module="Day$1_$2"
+Module="Day$1$2"
 testModule="${Module}_Test"
 csFile="$Module.cs"
 testFile="$testModule.cs"

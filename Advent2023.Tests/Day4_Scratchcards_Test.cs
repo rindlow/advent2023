@@ -7,7 +7,7 @@ public class Day4_Scratchcards_Test
     [InlineData("day4.txt", 26443)]
     public void TestPart1(string filename, int expected)
     {
-        Assert.Equal(expected, Day4_Scratchcards.SumPoints(filename));
+        Assert.Equal(expected, Day4Scratchcards.SumPoints(filename));
     }
 
     [Theory]
@@ -15,7 +15,7 @@ public class Day4_Scratchcards_Test
     [InlineData("day4.txt", 6284877)]
     public void TestPart2(string filename, int expected)
     {
-        Assert.Equal(expected, Day4_Scratchcards.NumberOfCards(filename));
+        Assert.Equal(expected, Day4Scratchcards.NumberOfCards(filename));
     }
 
 }

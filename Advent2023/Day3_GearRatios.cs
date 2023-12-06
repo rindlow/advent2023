@@ -2,11 +2,13 @@ namespace Advent2023;
 
 public class Schematics
 {
-    public readonly List<int> PartNumbers;
-    public readonly Dictionary<(int, int), List<int>> Gears;
+    public List<int> PartNumbers
+    { get; }
+    public Dictionary<(int, int), List<int>> Gears
+    { get; }
     readonly string[] lines;
-    readonly int nCols = 0;
-    readonly int nRows = 0;
+    readonly int nCols;
+    readonly int nRows;
     public Schematics(string filename)
     {
         PartNumbers = [];
@@ -112,7 +114,7 @@ public class Schematics
     }
 }
 
-public static class Day3_GearRatios
+public static class Day3GearRatios
 {
     public static int SumOfPartNumbers(string filename)
     {
