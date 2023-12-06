@@ -12,7 +12,7 @@ public class Day6_WaitForIt_Test
 
     [Theory]
     [InlineData("testinput/day6.txt", 71503)]
-    [InlineData("day6.txt", 0)]
+    [InlineData("day6.txt", 33875953)]
     public void TestPart2(string filename, int expected)
     {
         Assert.Equal(expected, Day6_WaitForIt.ProductOfNumberOfWaysSingleRace(filename));
