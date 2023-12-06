@@ -1,6 +1,6 @@
 namespace Advent2023;
 
-class Race(int duration, Int64 record)
+internal sealed class Race(int duration, Int64 record)
 {
     public int Duration = duration;
     public Int64 Record = record;

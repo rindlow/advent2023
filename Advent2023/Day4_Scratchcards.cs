@@ -1,14 +1,10 @@
 namespace Advent2023;
 public class Scratchcard
 {
-    public int Number
-    { get; }
-    public IEnumerable<int> Winning
-    { get; }
-    public IEnumerable<int> Having
-    { get; }
-    public int WinningNumbers
-    { get; }
+    public int Number { get; }
+    public IEnumerable<int> Winning { get; }
+    public IEnumerable<int> Having { get; }
+    public int WinningNumbers { get; }
 
     public Scratchcard(string card)
     {

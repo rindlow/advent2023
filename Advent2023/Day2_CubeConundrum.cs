@@ -8,7 +8,7 @@ struct SubSet
     public int greenCubes;
     public int blueCubes;
 }
-class Game
+internal sealed class Game
 {
     public int gameId;
     public List<SubSet> subSets;

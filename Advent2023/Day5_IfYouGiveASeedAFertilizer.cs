@@ -1,10 +1,8 @@
 namespace Advent2023;
 public class Range
 {
-    public Int64 Start
-    { get; set; }
-    public Int64 Length
-    { get; set; }
+    public Int64 Start { get; set; }
+    public Int64 Length { get; set; }
     public Range Overlap(Range other)
     {
         if (Start <= other.Start && other.Start < Start + Length)
@@ -47,10 +45,8 @@ public class Range
 }
 public class SeedMapEntry
 {
-    public Int64 DestinationStart
-    { get; }
-    public Range Source
-    { get; }
+    public Int64 DestinationStart { get; }
+    public Range Source { get; }
 
     public SeedMapEntry(string line)
     {
@@ -61,10 +57,8 @@ public class SeedMapEntry
 }
 public class SeedMap
 {
-    public string Source
-    { get; }
-    public string Destination
-    { get; }
+    public string Source { get; }
+    public string Destination { get; }
     private readonly IEnumerable<SeedMapEntry> entries;
     public SeedMap(string[] lines)
     {
@@ -81,7 +75,7 @@ public class SeedMap
         foreach (SeedMapEntry entry in entries)
         {
             Ranges unmapped = new([]);
-            foreach (Range range in ranges.ranges)
+            foreach (Range range in ranges.Content)
             {
                 Range overlap = range.Overlap(entry.Source);
                 if (overlap.Length > 0)
@@ -99,7 +93,7 @@ public class SeedMap
             }
             ranges = unmapped;
         }
-        foreach (Range range in mapped.ranges)
+        foreach (Range range in mapped.Content)
         {
             ranges.Add(range);
         }
@@ -108,9 +102,9 @@ public class SeedMap
     public Ranges Map(Ranges ranges)
     {
         Ranges ret = new([]);
-        foreach (Range range in ranges.ranges)
+        foreach (Range range in ranges.Content)
         {
-            foreach (Range r in MapEntries(range).ranges)
+            foreach (Range r in MapEntries(range).Content)
             {
                 ret.Add(r);
             }
@@ -119,25 +113,21 @@ public class SeedMap
     }
 }
 
-public class Ranges
+public class Ranges(IEnumerable<Range> initial)
 {
-    public List<Range> ranges
-    { get; }
-    public Ranges(IEnumerable<Range> initial)
-    {
-        ranges = initial.ToList();
-    }
+    public List<Range> Content { get; } = initial.ToList();
+
     public void Add(Range range)
     {
-        ranges.Add(range);
+        Content.Add(range);
     }
     public Int64 Lowest()
     {
-        return (from range in ranges select range.Start).Min();
+        return (from range in Content select range.Start).Min();
     }
     public override string ToString()
     {
-        return $"<Ranges {String.Join(' ', ranges)}>";
+        return $"<Ranges {String.Join(' ', Content)}>";
     }
 }
 struct Having
@@ -145,7 +135,7 @@ struct Having
     public Ranges Number;
     public string Kind;
 }
-class Almanac
+internal sealed class Almanac
 {
     public readonly Int64[] Seeds;
     readonly List<SeedMap> Maps;

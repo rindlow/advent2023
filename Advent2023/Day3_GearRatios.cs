@@ -2,10 +2,8 @@ namespace Advent2023;
 
 public class Schematics
 {
-    public List<int> PartNumbers
-    { get; }
-    public Dictionary<(int, int), List<int>> Gears
-    { get; }
+    public List<int> PartNumbers { get; }
+    public Dictionary<(int, int), List<int>> Gears { get; }
     readonly string[] lines;
     readonly int nCols;
     readonly int nRows;

@@ -8,8 +8,8 @@ public class Day(int no, Lazy<string> preload, Lazy<string> part1, Lazy<string> 
     protected Lazy<string> Part1 { get; set; } = part1;
     protected Lazy<string> Part2 { get; set; } = part2;
 
-    protected int No = no;
-    public TimeSpan TotalTime = TimeSpan.Zero;
+    private readonly int No = no;
+    public TimeSpan TotalTime { get; set; } = TimeSpan.Zero;
 
     public static string FormatTime(TimeSpan elapsed)
     {
@@ -43,7 +43,7 @@ public class Day(int no, Lazy<string> preload, Lazy<string> part1, Lazy<string> 
     }
 }
 
-class Program
+internal sealed class Program
 {
     static void Main(string[] args)
     {
