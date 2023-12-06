@@ -4,11 +4,26 @@ class Race(int duration, Int64 record)
 {
     public int Duration = duration;
     public Int64 Record = record;
-    private Int64 Distance(Int64 charge) {
-        return (Duration - charge) * charge;
+    private bool BeatsRecord(Int64 charge) {
+        return (Duration - charge) * charge > Record;
+    }
+    public int FindTransition(int left, int right) {
+        bool leftState = BeatsRecord(left);
+        while (right - left > 1) {
+            int mid = (left + right) / 2;
+            if (BeatsRecord(mid) == leftState) {
+                left = mid;
+            }
+            else {
+                right = mid;
+            }
+        }
+        return right;
     }
     public int NumberOfWays() {
-        return (from charge in Enumerable.Range(0, Duration) where Distance(charge) > Record select charge).Count();
+        int start = FindTransition(0, Duration / 2);
+        int end = FindTransition(Duration / 2, Duration);
+        return end - start;
     }
 }
 public static class Day6_WaitForIt
