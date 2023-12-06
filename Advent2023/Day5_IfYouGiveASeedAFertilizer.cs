@@ -12,10 +12,10 @@ public class Range {
         return new Range();
     }
     public List<Range> Subtract(Range other) {
-        if (Start <= other.Start && other.Start < Start + Length && Start + Length < other.Start + other.Length) {
+        if (Start < other.Start && other.Start < Start + Length && Start + Length < other.Start + other.Length) {
             return [new Range() { Start = Start, Length = other.Start - Start } ];
         }
-        if (Start <= other.Start && other.Start + other.Length < Start + Length) {
+        if (Start < other.Start && other.Start + other.Length < Start + Length) {
             return [
                 new Range() { Start = Start, Length = other.Start - Start },
                 new Range() { Start = other.Start + other.Length, Length = Start + Length - (other.Start + other.Length)} ];
@@ -26,7 +26,6 @@ public class Range {
         return [];
     }
     public Range Translate(Int64 diff) {
-        Console.WriteLine($"Translate({diff}) Start {Start} -> {Start + diff}");
         Start += diff;
         return this;
     }
@@ -54,18 +53,14 @@ public class SeedMap {
         Entries = from line in lines[1..] select new SeedMapEntry(line);
     }
     private Ranges MapEntries(Range inRange) {
-        Console.WriteLine($"\nMapEntries({inRange})");
         Ranges mapped = new ([]);
         Ranges ranges = new ([]);
         ranges.Add(inRange);
         foreach (SeedMapEntry entry in Entries) {
-            Console.WriteLine($" entry {entry.DestinationStart} {entry.Source}");
             Ranges unmapped = new ([]);
             foreach (Range range in ranges.ranges) {
-                Console.WriteLine($"  loop: range = {range}, unmapped = {unmapped}, mapped = {mapped}");
                 Range overlap = range.Overlap(entry.Source);
                 if (overlap.Length > 0) {
-                    Console.WriteLine($"Range {range} overlaps {entry.Source} with {overlap}");
                     mapped.Add(overlap.Translate(entry.DestinationStart - entry.Source.Start));
                     foreach (Range rest in range.Subtract(entry.Source)) {
                         unmapped.Add(rest);
@@ -77,13 +72,9 @@ public class SeedMap {
             }
             ranges = unmapped;
         }
-        Console.WriteLine($"ranges = {ranges} mapped = {mapped}");
         foreach (Range range in mapped.ranges) {
-            if (range.Length > 0) {
-                ranges.Add(range);
-            }
+            ranges.Add(range);
         }
-        Console.WriteLine($"returning {ranges}");
         return ranges;
     }
     public Ranges Map(Ranges ranges) {
@@ -93,7 +84,6 @@ public class SeedMap {
                 ret.Add(r);
             }
         }
-        Console.WriteLine($"Map returning {ret}\n");
         return ret;
     }
 }
@@ -107,7 +97,7 @@ public class Ranges {
         ranges.Add(range);
     }
     public Int64 Lowest() {
-        return (from range in ranges where range.Length > 0 select range.Start).Min();
+        return (from range in ranges select range.Start).Min();
     }
     public override string ToString() {
         return $"<Ranges {String.Join(' ', ranges)}>";
@@ -136,7 +126,6 @@ class Almanac {
         Maps.Add(new SeedMap(lines[start..]));
     }
     public Having Corresponds(Having having) {
-        Console.WriteLine($"Corresponds({having.Kind}, {having.Number})");
         foreach (SeedMap map in Maps) {
             if (map.Source == having.Kind) {
                 return new Having() { Number = map.Map(having.Number), Kind = map.Destination };
@@ -145,7 +134,6 @@ class Almanac {
         throw new Exception($"Unknown map source '{having.Kind}'");
     }
     public Ranges SeedsToLocations(Having current) {
-        Console.WriteLine($"SeedsToLocation({current.Number})");
         while (current.Kind != "location") {
             current = Corresponds(current);
         }
