@@ -59,20 +59,20 @@ public class SeedMap
 {
     public string Source { get; }
     public string Destination { get; }
-    private readonly IEnumerable<SeedMapEntry> entries;
+    private readonly IEnumerable<SeedMapEntry> _entries;
     public SeedMap(string[] lines)
     {
         string[] header = lines[0][..^5].Split('-');
         Source = header[0];
         Destination = header[2];
-        entries = from line in lines[1..] select new SeedMapEntry(line);
+        _entries = from line in lines[1..] select new SeedMapEntry(line);
     }
     private Ranges MapEntries(Range inRange)
     {
         Ranges mapped = new([]);
         Ranges ranges = new([]);
         ranges.Add(inRange);
-        foreach (SeedMapEntry entry in entries)
+        foreach (SeedMapEntry entry in _entries)
         {
             Ranges unmapped = new([]);
             foreach (Range range in ranges.Content)

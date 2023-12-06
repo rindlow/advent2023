@@ -8,7 +8,7 @@ public class Day(int no, Lazy<string> preload, Lazy<string> part1, Lazy<string> 
     protected Lazy<string> Part1 { get; set; } = part1;
     protected Lazy<string> Part2 { get; set; } = part2;
 
-    private readonly int No = no;
+    private readonly int _no = no;
     public TimeSpan TotalTime { get; set; } = TimeSpan.Zero;
 
     public static string FormatTime(TimeSpan elapsed)
@@ -25,7 +25,7 @@ public class Day(int no, Lazy<string> preload, Lazy<string> part1, Lazy<string> 
 
     public void Print()
     {
-        Console.WriteLine($"* Day {No}");
+        Console.WriteLine($"* Day {_no}");
         Preload.Value.ToString();
         Stopwatch stopwatch = new();
         stopwatch.Start();

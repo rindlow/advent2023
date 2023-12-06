@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 public static class Day1Trebuchet
 {
-    private static readonly Regex pattern = new("^[0-9]|one|t(wo|hree)|f(our|ive)|s(ix|even)|eight|nine");
+    private static readonly Regex _pattern = new("^[0-9]|one|t(wo|hree)|f(our|ive)|s(ix|even)|eight|nine");
     private static int CalibrationValue(string line)
     {
         int first = -1;
@@ -64,7 +64,7 @@ public static class Day1Trebuchet
     private static int DigitRegex(string line)
     {
         // string pattern = "^[0-9]|one|t(wo|hree)|f(our|ive)|s(ix|even)|eight|nine";
-        Match match = pattern.Match(line);
+        Match match = _pattern.Match(line);
         if (match.Success)
         {
             return match.Value switch

@@ -2,11 +2,11 @@ namespace Advent2023;
 
 internal sealed class Race(int duration, Int64 record)
 {
-    public int Duration = duration;
-    public Int64 Record = record;
+    private readonly int _duration = duration;
+    private readonly Int64 _record = record;
     private bool BeatsRecord(Int64 charge)
     {
-        return (Duration - charge) * charge > Record;
+        return (_duration - charge) * charge > _record;
     }
     public int FindTransition(int left, int right)
     {
@@ -27,8 +27,8 @@ internal sealed class Race(int duration, Int64 record)
     }
     public int NumberOfWays()
     {
-        int start = FindTransition(0, Duration / 2);
-        int end = FindTransition(Duration / 2, Duration);
+        int start = FindTransition(0, _duration / 2);
+        int end = FindTransition(_duration / 2, _duration);
         return end - start;
     }
 }
