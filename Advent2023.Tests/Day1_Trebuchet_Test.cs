@@ -17,4 +17,3 @@ public class Day1_Trebuchet_Test
         Assert.Equal(expected, actual: Day1_Trebuchet.SumCalibrationValuesWithText(filename));
     }
 }
-  
