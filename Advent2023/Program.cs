@@ -65,6 +65,10 @@ class Program
                 new Lazy<string>(() => Day5_IfYouGiveASeedAFertilizer.LowestLocationNumber("input/day5.txt").ToString()),
                 new Lazy<string>(() => Day5_IfYouGiveASeedAFertilizer.LowestLocationNumber("input/day5.txt").ToString()),
                 new Lazy<string>(() => Day5_IfYouGiveASeedAFertilizer.LowestLocationNumberRange("input/day5.txt").ToString())),
+            new(6,
+                new Lazy<string>(() => Day6_WaitForIt.ProductOfNumberOfWays("input/day6.txt").ToString()),
+                new Lazy<string>(() => Day6_WaitForIt.ProductOfNumberOfWays("input/day6.txt").ToString()),
+                new Lazy<string>(() => Day6_WaitForIt.ProductOfNumberOfWaysSingleRace("input/day6.txt").ToString())),
         };
 
         string[] argv = System.Environment.GetCommandLineArgs();
