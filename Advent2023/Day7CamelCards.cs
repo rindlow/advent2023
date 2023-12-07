@@ -1,7 +1,3 @@
-using System.Collections.Immutable;
-using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
-
 namespace Advent2023;
 
 internal sealed class Hand
@@ -29,47 +25,17 @@ internal sealed class Hand
                 numCards[card] = 1;
             }
         }
-        if (numCards.ContainsValue(5))
+        return String.Concat((from kv in numCards
+                              select $"{kv.Value}").OrderDescending()) switch
         {
-            return 6;
-        }
-        if (numCards.ContainsValue(4))
-        {
-            return 5;
-        }
-        if (numCards.ContainsValue(3))
-        {
-            if (numCards.ContainsValue(2))
-            {
-                return 4;
-            }
-            {
-                return 3;
-            }
-        }
-        return (from kv in numCards where kv.Value == 2 select kv.Value).Count();
-    }
-    private static int CardValue(char c)
-    {
-        switch (c)
-        {
-            case 'A': return 14;
-            case 'K': return 13;
-            case 'Q': return 12;
-            case 'J': return 11;
-            case 'T': return 10;
-            default: return c - '0';
-        }
-    }
-    public int SortValue()
-    {
-        int value = 0;
-        foreach (char c in Cards)
-        {
-            value *= 100;
-            value += CardValue(c);
-        }
-        return value;
+            "5" => 6,
+            "41" => 5,
+            "32" => 4,
+            "311" => 3,
+            "221" => 2,
+            "2111" => 1,
+            _ => 0
+        };
     }
     public int StrengthWithJokers()
     {
@@ -85,106 +51,50 @@ internal sealed class Hand
                 numCards[card] = 1;
             }
         }
-        int numJokers = 0;
-        if (numCards.TryGetValue('J', out int numJ))
+        numCards.Remove('J');
+        return String.Concat((from kv in numCards
+                              select $"{kv.Value}").OrderDescending()) switch
         {
-            numJokers = numJ;
-            numCards.Remove('J');
-        }
-
-        if (numCards.ContainsValue(5) || numJokers >= 4)
-        {
-            return 6;
-        }
-        if (numCards.ContainsValue(4))
-        {
-            return 5 + numJokers;
-        }
-        if (numCards.ContainsValue(3))
-        {
-            if (numCards.ContainsValue(2))
-            {
-                return 4;
-            }
-            else if (numJokers > 0)
-            {
-                return 4 + numJokers;
-            }
-            else
-            {
-                return 3;
-            }
-        }
-        int pairs = (from kv in numCards where kv.Value == 2 select kv.Value).Count();
-        if (pairs == 2)
-        {
-            if (numJokers == 1)
-            {
-                return 4;
-            }
-            else
-            {
-                return 2;
-            }
-        }
-        if (pairs == 1)
-        {
-            if (numJokers == 3)
-            {
-                return 6;
-            }
-            if (numJokers == 2)
-            {
-                return 5;
-            }
-            if (numJokers == 1)
-            {
-                return 3;
-            }
-            else
-            {
-                return 1;
-            }
-        }
-        if (numJokers == 3)
-        {
-            return 5;
-        }
-        if (numJokers == 2)
-        {
-            return 3;
-        }
-        if (numJokers == 1)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-
+            "5" or "4" or "3" or "2" or "1" or "" => 6,
+            "41" or "31" or "21" or "11" => 5,
+            "32" or "22" => 4,
+            "311" or "211" or "111" => 3,
+            "221" => 2,
+            "2111" or "1111" => 1,
+            _ => 0
+        };
     }
-    public int SortValueWithJokers()
+    private static int CardValue(char c)
     {
-        int value = 0;
-        foreach (char c in Cards)
+        return c switch
         {
-            value *= 100;
-            value += CardValueWithJokers(c);
-        }
-        return value;
+            'A' => 14,
+            'K' => 13,
+            'Q' => 12,
+            'J' => 11,
+            'T' => 10,
+            _ => c - '0',
+        };
     }
     private static int CardValueWithJokers(char c)
     {
-        switch (c)
+        return c switch
         {
-            case 'A': return 14;
-            case 'K': return 13;
-            case 'Q': return 12;
-            case 'J': return 1;
-            case 'T': return 10;
-            default: return c - '0';
-        }
+            'A' => 14,
+            'K' => 13,
+            'Q' => 12,
+            'J' => 1,
+            'T' => 10,
+            _ => c - '0',
+        };
+    }
+    public int SortValue()
+    {
+        return Cards.Aggregate(0, (value, c) => 100 * value + CardValue(c));
+    }
+    public int SortValueWithJokers()
+    {
+        return Cards.Aggregate(0, (value, c) => 100 * value + CardValueWithJokers(c));
     }
 }
 public static class Day7CamelCards
@@ -195,12 +105,8 @@ public static class Day7CamelCards
                      select new Hand(line))
                     .OrderBy(h => h.Strength())
                     .ThenBy(h => h.SortValue()).ToArray();
-        int winnings = 0;
-        for (int i = 0; i < hands.Length; i++)
-        {
-            winnings += hands[i].Bid * (i + 1);
-        }
-        return winnings;
+        return (from tuple in hands.Zip(Enumerable.Range(1, hands.Length))
+                select tuple.First.Bid * tuple.Second).Sum();
     }
     public static int TotalWinningsWithJokers(string filename)
     {
@@ -208,11 +114,7 @@ public static class Day7CamelCards
                      select new Hand(line))
                     .OrderBy(h => h.StrengthWithJokers())
                     .ThenBy(h => h.SortValueWithJokers()).ToArray();
-        int winnings = 0;
-        for (int i = 0; i < hands.Length; i++)
-        {
-            winnings += hands[i].Bid * (i + 1);
-        }
-        return winnings;
+        return (from tuple in hands.Zip(Enumerable.Range(1, hands.Length))
+                select tuple.First.Bid * tuple.Second).Sum();
     }
 }
