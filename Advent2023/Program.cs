@@ -73,6 +73,10 @@ internal sealed class Program
                 new Lazy<string>(() => Day6WaitForIt.ProductOfNumberOfWays("input/day6.txt").ToString()),
                 new Lazy<string>(() => Day6WaitForIt.ProductOfNumberOfWays("input/day6.txt").ToString()),
                 new Lazy<string>(() => Day6WaitForIt.ProductOfNumberOfWaysSingleRace("input/day6.txt").ToString())),
+            new(7,
+                new Lazy<string>(() => Day7CamelCards.TotalWinnings("input/day7.txt").ToString()),
+                new Lazy<string>(() => Day7CamelCards.TotalWinnings("input/day7.txt").ToString()),
+                new Lazy<string>(() => Day7CamelCards.TotalWinningsWithJokers("input/day7.txt").ToString())),
         };
 
         string[] argv = System.Environment.GetCommandLineArgs();
