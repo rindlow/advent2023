@@ -11,7 +11,7 @@ internal sealed class Hand
         Cards = split[0];
         Bid = Int32.Parse(split[1]);
     }
-    public int Strength()
+    private Dictionary<char, int> NumCards()
     {
         Dictionary<char, int> numCards = [];
         foreach (char card in Cards)
@@ -25,7 +25,11 @@ internal sealed class Hand
                 numCards[card] = 1;
             }
         }
-        return String.Concat((from kv in numCards
+        return numCards;
+    }
+    public int Strength()
+    {
+        return String.Concat((from kv in NumCards()
                               select $"{kv.Value}").OrderDescending()) switch
         {
             "5" => 6,
@@ -39,18 +43,7 @@ internal sealed class Hand
     }
     public int StrengthWithJokers()
     {
-        Dictionary<char, int> numCards = [];
-        foreach (char card in Cards)
-        {
-            if (numCards.TryGetValue(card, out int value))
-            {
-                numCards[card]++;
-            }
-            else
-            {
-                numCards[card] = 1;
-            }
-        }
+        var numCards = NumCards();
         numCards.Remove('J');
         return String.Concat((from kv in numCards
                               select $"{kv.Value}").OrderDescending()) switch
