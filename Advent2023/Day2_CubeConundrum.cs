@@ -1,5 +1,3 @@
-using System.Runtime.Intrinsics.X86;
-
 namespace Advent2023;
 
 struct SubSet
