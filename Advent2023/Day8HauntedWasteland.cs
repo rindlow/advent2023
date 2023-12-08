@@ -8,9 +8,39 @@ sealed class DesertMap
     {
         var lines = File.ReadAllLines(filename);
         Instructions = lines[0];
-        Network = new(from line in lines[2..] 
-                      select new KeyValuePair<string, (string, string)>(key: line[..3], 
+        Network = new(from line in lines[2..]
+                      select new KeyValuePair<string, (string, string)>(key: line[..3],
                                                                         value: (line[7..10], line[12..15])));
+    }
+    public string Next(string node, char instruction)
+    {
+        var element = Network[node];
+        if (instruction == 'L')
+        {
+            return element.Item1;
+        }
+        else
+        {
+            return element.Item2;
+        }
+    }
+    public int LoopLength(string node)
+    {
+        int steps = 0;
+        List<int> end = [];
+        while (end.Count < 2)
+        {
+            foreach (char instruction in Instructions)
+            {
+                steps++;
+                node = Next(node, instruction);
+                if (node[2] == 'Z')
+                {
+                    end.Add(steps);
+                }
+            }
+        }
+        return end[1] - end[0];
     }
 }
 public static class Day8HauntedWasteland
@@ -22,19 +52,10 @@ public static class Day8HauntedWasteland
         string current = "AAA";
         while (current != "ZZZ")
         {
-            foreach(char instruction in map.Instructions)
+            foreach (char instruction in map.Instructions)
             {
                 steps++;
-                var element = map.Network[current];
-                Console.WriteLine($"current = {current}, instruction = {instruction}, element = {element}");
-                if (instruction == 'L')
-                {
-                    current = element.Item1;
-                }
-                else
-                {
-                    current = element.Item2;
-                }
+                current = map.Next(current, instruction);
                 if (current == "ZZZ")
                 {
                     return steps;
@@ -42,5 +63,25 @@ public static class Day8HauntedWasteland
             }
         }
         return steps;
+    }
+    private static long Gcd(long a, long b)
+    {
+        if (b == 0)
+        {
+            return a;
+        }
+        return Gcd(b, a % b);
+    }
+    private static long Lcm(long a, long b)
+    {
+        return a * (b / Gcd(a, b));
+    }
+    public static long NumberOfStepsParallel(string filename)
+    {
+        DesertMap map = new(filename);
+        return (from node in map.Network.Keys
+                where node[2] == 'A'
+                select map.LoopLength(node))
+               .Aggregate(1L, (multiple, loop) => Lcm(multiple, loop));
     }
 }
