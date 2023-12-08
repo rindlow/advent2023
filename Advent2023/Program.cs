@@ -45,10 +45,10 @@ public class Day(int no, Lazy<string> preload, Lazy<string> part1, Lazy<string> 
 
 internal sealed class Program
 {
-    static void Main(string[] args)
+    static void Main()
     {
         Console.WriteLine("Advent 2023\n");
-        Day[] Days = {
+        Day[] Days = [
             new(1,
                 new Lazy<string>(() => Day1Trebuchet.SumCalibrationValues("input/day1.txt").ToString()),
                 new Lazy<string>(() => Day1Trebuchet.SumCalibrationValues("input/day1.txt").ToString()),
@@ -77,8 +77,7 @@ internal sealed class Program
                 new Lazy<string>(() => Day7CamelCards.TotalWinnings("input/day7.txt").ToString()),
                 new Lazy<string>(() => Day7CamelCards.TotalWinnings("input/day7.txt").ToString()),
                 new Lazy<string>(() => Day7CamelCards.TotalWinningsWithJokers("input/day7.txt").ToString())),
-        };
-
+        ];
         string[] argv = System.Environment.GetCommandLineArgs();
         if (argv.Length < 2)
         {
