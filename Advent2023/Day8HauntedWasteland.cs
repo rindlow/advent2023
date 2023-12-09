@@ -27,8 +27,7 @@ sealed class DesertMap
     public int LoopLength(string node)
     {
         int steps = 0;
-        List<int> end = [];
-        while (end.Count < 2)
+        while (true)
         {
             foreach (char instruction in Instructions)
             {
@@ -36,11 +35,10 @@ sealed class DesertMap
                 node = Next(node, instruction);
                 if (node[2] == 'Z')
                 {
-                    end.Add(steps);
+                    return steps;
                 }
             }
         }
-        return end[1] - end[0];
     }
 }
 public static class Day8HauntedWasteland
@@ -82,6 +80,6 @@ public static class Day8HauntedWasteland
         return (from node in map.Network.Keys
                 where node[2] == 'A'
                 select map.LoopLength(node))
-               .Aggregate(1L, (multiple, loop) => Lcm(multiple, loop));
+               .Aggregate(1L, (multiple, loop) => Lcm(loop, multiple));
     }
 }
