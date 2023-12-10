@@ -85,6 +85,10 @@ internal sealed class Program
                 new Lazy<string>(() => Day9MirageMaintenance.SumExtrapolateNext("input/day9.txt").ToString()),
                 new Lazy<string>(() => Day9MirageMaintenance.SumExtrapolateNext("input/day9.txt").ToString()),
                 new Lazy<string>(() => Day9MirageMaintenance.SumExtrapolatePrevious("input/day9.txt").ToString())),
+            new(9,
+                new Lazy<string>(() => Day10PipeMaze.FarthestTile("input/day10.txt").ToString()),
+                new Lazy<string>(() => Day10PipeMaze.FarthestTile("input/day10.txt").ToString()),
+                new Lazy<string>(() => Day10PipeMaze.InsideArea("input/day10.txt").ToString())),
         ];
         string[] argv = System.Environment.GetCommandLineArgs();
         if (argv.Length < 2)
