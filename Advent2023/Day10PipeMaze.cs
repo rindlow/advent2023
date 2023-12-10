@@ -14,14 +14,16 @@ public readonly struct Position(int row, int col)
 }
 public sealed class Maze
 {
-    private string[] _rows;
     public Position Start { get; }
+    private readonly string[] _rows;
+    private readonly char _startShape;
     public Maze(string filename)
     {
         _rows = [.. File.ReadAllLines(filename)];
-        int startrow = (from i in Enumerable.Range(0, _rows.Length) where _rows[i].Contains('S') select i).First();
-        int startcol = _rows[startrow].IndexOf('S');
-        Start = new(startrow, startcol);
+        int startRow = (from i in Enumerable.Range(0, _rows.Length) where _rows[i].Contains('S') select i).First();
+        int startCol = _rows[startRow].IndexOf('S');
+        Start = new(startRow, startCol);
+        _startShape = GetStartShape();
     }
     private char GetStartShape()
     {
@@ -62,7 +64,7 @@ public sealed class Maze
     {
         if (pos.Row == Start.Row && pos.Col == Start.Col)
         {
-            return GetStartShape();
+            return _startShape;
         }
         return _rows[pos.Row][pos.Col];
     }
@@ -79,15 +81,15 @@ public sealed class Maze
             _ => [],
         };
     }
-    public List<Position> Loop()
+    public HashSet<Position> Loop()
     {
-        List<Position> visited = [];
+        HashSet<Position> visited = [];
         Position current = Start;
         while (true)
         {
             visited.Add(current);
             IEnumerable<Position> neighbours = from n in Neighbours(current) where !visited.Contains(n) select n;
-            if (!neighbours.Any())
+            if (neighbours.Count() == 0)
             {
                 return visited;
             }
@@ -96,7 +98,7 @@ public sealed class Maze
     }
     public int InsideArea()
     {
-        List<Position> loop = Loop();
+        HashSet<Position> loop = Loop();
         int area = 0;
         for (int row = 0; row < _rows.Length; row++)
         {
