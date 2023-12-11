@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 
 public static class Day1Trebuchet
 {
-    private static readonly Regex _pattern = new("^[0-9]|one|t(wo|hree)|f(our|ive)|s(ix|even)|eight|nine");
     private static int CalibrationValue(string line)
     {
         int first = -1;
@@ -21,67 +20,6 @@ public static class Day1Trebuchet
             }
         }
         return 10 * first + last;
-    }
-    private static int Digit(string line)
-    {
-        List<string> digits = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-        if (line[0] >= '0' && line[0] <= '9')
-        {
-            return line[0] - '0';
-        }
-        else
-        {
-            foreach (string digit in digits)
-            {
-                if (line.StartsWith(digit))
-                {
-                    return digits.IndexOf(digit) + 1;
-                }
-            }
-        }
-        return -1;
-    }
-    private static int LastDigit(string line)
-    {
-        List<string> digits = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
-        char c = line.Last();
-        if (c >= '0' && c <= '9')
-        {
-            return c - '0';
-        }
-        else
-        {
-            foreach (string digit in digits)
-            {
-                if (line.EndsWith(digit))
-                {
-                    return digits.IndexOf(digit) + 1;
-                }
-            }
-        }
-        return -1;
-    }
-    private static int DigitRegex(string line)
-    {
-        // string pattern = "^[0-9]|one|t(wo|hree)|f(our|ive)|s(ix|even)|eight|nine";
-        Match match = _pattern.Match(line);
-        if (match.Success)
-        {
-            return match.Value switch
-            {
-                "one" => 1,
-                "two" => 2,
-                "three" => 3,
-                "four" => 4,
-                "five" => 5,
-                "six" => 6,
-                "seven" => 7,
-                "eight" => 8,
-                "nine" => 9,
-                _ => Int32.Parse(match.Value)
-            };
-        }
-        return -1;
     }
     private static int DigitNestedIf(string line)
     {
@@ -150,30 +88,6 @@ public static class Day1Trebuchet
                     first = digit;
                 }
                 last = digit;
-            }
-        }
-        return 10 * first + last;
-    }
-    private static int CalibrationValueWithText2(string line)
-    {
-        int first = 0;
-        int last = 0;
-        foreach (int i in Enumerable.Range(0, line.Length))
-        {
-            int digit = Digit(line[i..]);
-            if (digit >= 0)
-            {
-                first = digit;
-                break;
-            }
-        }
-        foreach (int i in Enumerable.Range(0, line.Length + 1).Reverse())
-        {
-            int digit = LastDigit(line[..i]);
-            if (digit >= 0)
-            {
-                last = digit;
-                break;
             }
         }
         return 10 * first + last;
