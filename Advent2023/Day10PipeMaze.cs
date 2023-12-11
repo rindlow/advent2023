@@ -3,15 +3,6 @@ using System.Runtime.InteropServices;
 
 namespace Advent2023;
 
-public readonly struct Position(int row, int col)
-{
-    public readonly int Row { get; } = row;
-    public readonly int Col { get; } = col;
-    public override string ToString()
-    {
-        return $"<Position {Row}, {Col}>";
-    }
-}
 public sealed class Maze
 {
     public Position Start { get; }
@@ -89,7 +80,7 @@ public sealed class Maze
         {
             visited.Add(current);
             IEnumerable<Position> neighbours = from n in Neighbours(current) where !visited.Contains(n) select n;
-            if (neighbours.Count() == 0)
+            if (!neighbours.Any())
             {
                 return visited;
             }
