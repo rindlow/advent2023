@@ -2,17 +2,29 @@ namespace Advent2023;
 sealed class Image
 {
     readonly string[] _image;
-    readonly IEnumerable<int> _emptyCols;
-    readonly IEnumerable<int> _emptyRows;
+    readonly HashSet<int> _emptyCols;
+    readonly List<int> _emptyRows = [];
     public Image(string filename)
     {
         _image = File.ReadAllLines(filename);
-        _emptyCols = (from i in Enumerable.Range(0, _image.First().Length)
-                      where (from row in _image select row[i]).All(c => c == '.')
-                      select i);
-        _emptyRows = from i in Enumerable.Range(0, _image.Length)
-                     where _image[i].All(c => c == '.')
-                     select i;
+        bool rowIsEmpty;
+        _emptyCols = new(Enumerable.Range(0, _image[0].Length));
+        foreach (int row in Enumerable.Range(0, _image.Length))
+        {
+            rowIsEmpty = true;
+            foreach (int col in Enumerable.Range(0, _image[0].Length))
+            {
+                if (_image[row][col] != '.')
+                {
+                    _emptyCols.Remove(col);
+                    rowIsEmpty = false;
+                }
+            }
+            if (rowIsEmpty)
+            {
+                _emptyRows.Add(row);
+            }
+        }
     }
     private Position ExpandedPosition(int row, int col, int distance)
     {
