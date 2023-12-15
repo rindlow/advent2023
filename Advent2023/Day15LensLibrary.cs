@@ -26,14 +26,13 @@ class LensMap
     public void Remove(string label)
     {
         int hash = new Hash(label).Value;
-        if (_map.ContainsKey(hash))
+        if (_map.TryGetValue(hash, out List<Lens>? value))
         {
-            IEnumerable<Lens> lenses = from l in _map[hash] where l.Label == label select l;
+            IEnumerable<Lens> lenses = from l in value where l.Label == label select l;
             if (lenses.Any())
             {
-                _map[hash].Remove(lenses.First());
+                value.Remove(lenses.First());
             }
-            Console.WriteLine($"Sub({label}) hash = {hash} hashline = {String.Join(',', _map[hash])}");
         }
     }
     public void Add(Lens lens)
@@ -65,19 +64,9 @@ class LensMap
         {
             _map[hash] = [lens];
         }
-        Console.WriteLine($"Add({lens}) hash = {hash} hashline = {String.Join(',', _map[hash])}");
     }
     public int FocusingPower()
     {
-        foreach (var kv in _map)
-        {
-            Console.WriteLine($"box {kv.Key} ({kv.Key + 1})");
-            foreach (var (First, Second) in Enumerable.Range(0, kv.Value.Count).Zip(kv.Value))
-            {
-                Console.WriteLine($"{First} ({First + 1}) * {Second.FocalLength}");
-            }
-            Console.WriteLine();
-        }
         return (from kv in _map 
                 select (kv.Key + 1) * (from pair in Enumerable.Range(0, kv.Value.Count).Zip(kv.Value)
                                        select (pair.First + 1) * pair.Second.FocalLength).Sum()).Sum();
