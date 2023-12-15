@@ -100,15 +100,14 @@ public static class Day15LensLibrary
         LensMap map = new();
         foreach (string step in ReadFile(filename))
         {
-            string label = step[..2];
-            switch (step[2])
+            if (step.Contains('-'))
             {
-                case '-':
-                    map.Remove(label);
-                    break;
-                case '=':
-                    map.Add(new Lens() {Label = label, FocalLength = step[3] - '0' });
-                    break;
+                map.Remove(step[..step.IndexOf('-')]);
+            }
+            else
+            {
+                var split = step.Split('=');
+                map.Add(new Lens() {Label = split[0], FocalLength = Int32.Parse(split[1]) });
             }
         }
         return map.FocusingPower();
