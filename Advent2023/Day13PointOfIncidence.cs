@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace Advent2023;
 class PatternNote
 {
@@ -8,22 +10,76 @@ class PatternNote
     }
     private static int Reflection(string[] rows)
     {
-        Console.WriteLine($"Reflection\n {String.Join("\n ", rows)}");
+        // Console.WriteLine($"Reflection\n {String.Join("\n ", rows)}");
         foreach (int i in Enumerable.Range(0, rows.Length - 1))
         {
             int j = 0;
-            Console.WriteLine($"i = {i}, j = {j} comparing rows {i - j} and {i + j + 1}");
-            Console.WriteLine($"{rows[i - j]}\n{rows[i + j + 1]}");
+            // Console.WriteLine($"i = {i}, j = {j} comparing rows {i - j} and {i + j + 1}");
+            // Console.WriteLine($"{rows[i - j]}\n{rows[i + j + 1]}");
             while (rows[i - j] == rows[i + j + 1])
             {
                 j++;
                 if (i - j < 0 || i + j + 1 >= rows.Length)
                 {
-                    Console.WriteLine($"bounds reached, returning {i + 1}");
+                    // Console.WriteLine($"bounds reached, returning {i + 1}");
                     return i + 1;
+                }
+                // Console.WriteLine($"i = {i}, j = {j} comparing rows {i - j} and {i + j + 1}");
+                // Console.WriteLine($"{rows[i - j]}\n{rows[i + j + 1]}");
+            }
+        }
+        // Console.WriteLine($"end reached, returning 0");
+        return 0;
+    }
+    private static bool DiffOne(string a, string b)
+    {
+        bool diff = (from pair in a.Zip(b) where pair.First != pair.Second select pair.First).Count() == 1;
+        if (diff)
+        {
+            Console.WriteLine("Diff by one!");
+        }
+        return diff;
+    }
+    private static int ReflectionSmudge(string[] rows)
+    {
+        Console.WriteLine($"\n\nReflection\n {String.Join("\n ", rows)}");
+        bool smudgeFound = false;
+        foreach (int i in Enumerable.Range(0, rows.Length - 1))
+        {
+            int j = 0;
+            Console.WriteLine();
+            Console.WriteLine($"i = {i}, j = {j} comparing rows {i - j} and {i + j + 1}");
+            Console.WriteLine($"{rows[i - j]}\n{rows[i + j + 1]}");
+            bool isEqual = rows[i - j] == rows[i + j + 1];
+            bool isDiffOne = DiffOne(rows[i - j], rows[i + j + 1]);
+            if (isDiffOne)
+            {
+                smudgeFound = true;
+            }
+            while (isEqual || isDiffOne)
+            {
+                j++;
+                if (i - j < 0 || i + j + 1 >= rows.Length)
+                {
+                    if (smudgeFound)
+                    {
+                        Console.WriteLine($"bounds reached, returning {i + 1}");
+                        return i + 1;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"bounds reached, but no smudge found");
+                        break;
+                    }
                 }
                 Console.WriteLine($"i = {i}, j = {j} comparing rows {i - j} and {i + j + 1}");
                 Console.WriteLine($"{rows[i - j]}\n{rows[i + j + 1]}");
+                isEqual = rows[i - j] == rows[i + j + 1];
+                isDiffOne = DiffOne(rows[i - j], rows[i + j + 1]);
+                if (isDiffOne)
+                {
+                    smudgeFound = true;
+                }
             }
         }
         Console.WriteLine($"end reached, returning 0");
@@ -31,18 +87,36 @@ class PatternNote
     }
     private static string[] Transpose(string[] rows)
     {
+        Console.WriteLine("Transposing");
         return (from i in Enumerable.Range(0, rows[0].Length)
                 select String.Concat(from row in rows select row[i])).ToArray();
     }
     public int Summary()
     {
         int above = Reflection(_rows);
-        Console.WriteLine($"above = {above}");
+        // Console.WriteLine($"above = {above}");
         if (above > 0)
         {
             return 100 * above;
         }
         return Reflection(Transpose(_rows));
+    }
+    public int SummarySmudge()
+    {
+        int above = ReflectionSmudge(_rows);
+        // Console.WriteLine($"above = {above}");
+        if (above > 0)
+        {
+            Console.WriteLine($"row reflection, summary = {100 * above}");
+            return 100 * above;
+        }
+        int left = ReflectionSmudge(Transpose(_rows));
+        if (left == 0)
+        {
+            Console.WriteLine("No reflection found!");
+        }
+        Console.WriteLine($"col reflection, summary = {left}");
+        return left;
     }
 }
 public static class Day13PointOfIncidence
@@ -70,5 +144,9 @@ public static class Day13PointOfIncidence
     public static int SumPatternNotes(string filename)
     {
         return (from note in ReadFile(filename) select note.Summary()).Sum();
+    }
+        public static int SumPatternNotesSmudge(string filename)
+    {
+        return (from note in ReadFile(filename) select note.SummarySmudge()).Sum();
     }
 }

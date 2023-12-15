@@ -256,8 +256,8 @@ sealed class Condition
     {
         _row = String.Join('?', Enumerable.Repeat(_row, 5));
         _groups = [.. _groups, .. _groups, .. _groups, .. _groups, .. _groups];
-        Console.WriteLine($"{nConditions} Unfold row = {_row}");
-        Console.WriteLine($"{nConditions} Unfold groups = {String.Join(',', _groups)}");
+        // Console.WriteLine($"{nConditions} Unfold row = {_row}");
+        // Console.WriteLine($"{nConditions} Unfold groups = {String.Join(',', _groups)}");
         return this;
     }
 }
