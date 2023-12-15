@@ -93,6 +93,22 @@ internal sealed class Program
                 new Lazy<string>(() => Day11CosmicExpansion.SumDistances("input/day11.txt", 1).ToString()),
                 new Lazy<string>(() => Day11CosmicExpansion.SumDistances("input/day11.txt", 1).ToString()),
                 new Lazy<string>(() => Day11CosmicExpansion.SumDistances("input/day11.txt", 999999).ToString())),
+            new(12,
+                new Lazy<string>(() => Day12HotSprings.SumPossibleArrangements("input/day12.txt").ToString()),
+                new Lazy<string>(() => Day12HotSprings.SumPossibleArrangements("input/day12.txt").ToString()),
+                new Lazy<string>(() => Day12HotSprings.SumPossibleArrangements("input/day12.txt").ToString())),
+            new(13,
+                new Lazy<string>(() => Day13PointOfIncidence.SumPatternNotes("input/day13.txt").ToString()),
+                new Lazy<string>(() => Day13PointOfIncidence.SumPatternNotes("input/day13.txt").ToString()),
+                new Lazy<string>(() => Day13PointOfIncidence.SumPatternNotes("input/day13.txt").ToString())),
+            new(14,
+                new Lazy<string>(() => Day14ParabolicReflectorDish.NorthSupportLoad("input/day14.txt").ToString()),
+                new Lazy<string>(() => Day14ParabolicReflectorDish.NorthSupportLoad("input/day14.txt").ToString()),
+                new Lazy<string>(() => Day14ParabolicReflectorDish.BillionLoad("input/day14.txt").ToString())),
+            new(15,
+                new Lazy<string>(() => Day15LensLibrary.HashFile("input/day15.txt").ToString()),
+                new Lazy<string>(() => Day15LensLibrary.HashFile("input/day15.txt").ToString()),
+                new Lazy<string>(() => Day15LensLibrary.FocusingPower("input/day15.txt").ToString())),
         ];
         string[] argv = System.Environment.GetCommandLineArgs();
         if (argv.Length < 2)
