@@ -11,7 +11,7 @@ public class Day20PulsePropagation_Test
         Assert.Equal(expected, Day20PulsePropagation.HighTimesLow(filename));
     }
     [Theory]
-    [InlineData("day20.txt", 0)]
+    [InlineData("day20.txt", 233338595643977L)]
     public void TestPart2(string filename, long expected)
     {
         Assert.Equal(expected, Day20PulsePropagation.PressesUntilRxLow(filename));
