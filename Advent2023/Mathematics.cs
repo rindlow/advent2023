@@ -1,6 +1,6 @@
 namespace Advent2023;
 
-class Mathematics
+sealed class Mathematics
 {
     public static long Gcd(long a, long b)
     {

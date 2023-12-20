@@ -8,15 +8,15 @@ enum Operator
 {
     LessThan, GreaterThan
 }
-class RatingRange
+sealed class RatingRange
 {
     public CatDict Start { get; } = [];
     public CatDict End { get; } = [];
 
     public RatingRange()
     {
-        Start = new() { { Category.X, 1}, {Category.M, 1}, {Category.A, 1}, {Category.S, 1}};
-        End = new() { { Category.X, 4001}, {Category.M, 4001}, {Category.A, 4001}, {Category.S, 4001}};
+        Start = new() { { Category.X, 1 }, { Category.M, 1 }, { Category.A, 1 }, { Category.S, 1 } };
+        End = new() { { Category.X, 4001 }, { Category.M, 4001 }, { Category.A, 4001 }, { Category.S, 4001 } };
     }
     public RatingRange(CatDict start, CatDict end)
     {
@@ -25,8 +25,8 @@ class RatingRange
     }
     public RatingRange SplitOff(Category category, int value)
     {
-        CatDict newStart = new (Start);
-        CatDict newEnd = new (End);
+        CatDict newStart = new(Start);
+        CatDict newEnd = new(End);
         newStart[category] = value;
         End[category] = value;
         return new(newStart, newEnd);
@@ -37,7 +37,7 @@ struct Split
     public RatingRange Action;
     public RatingRange? NoAction;
 }
-class Comparasion(string comp)
+sealed class Comparasion(string comp)
 {
     readonly Category _category = comp[0] switch
     {
@@ -85,12 +85,12 @@ class Comparasion(string comp)
         return new() { Action = range, NoAction = splitoff };
     }
 }
-class RangeAccept
+sealed class RangeAccept
 {
     public string Action { get; }
     public List<Split> splits;
 }
-class Rule
+sealed class Rule
 {
     Comparasion? _comparaison;
     string _action;
@@ -130,7 +130,7 @@ class Rule
         return ranges;
     }
 }
-class Workflow
+sealed class Workflow
 {
     public string Name { get; }
     List<Rule> _rules = [];
@@ -164,7 +164,7 @@ class Workflow
         return ranges;
     }
 }
-class Rating
+sealed class Rating
 {
     public int X { get; }
     public int M { get; }
@@ -184,9 +184,9 @@ class Rating
     }
 }
 
-class PartRatings
+sealed class PartRatings
 {
-    public Dictionary<string, Workflow> Workflows { get; }= [];
+    public Dictionary<string, Workflow> Workflows { get; } = [];
     public List<Rating> Ratings { get; } = [];
     public PartRatings(string filename)
     {

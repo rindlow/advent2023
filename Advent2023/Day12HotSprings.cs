@@ -1,43 +1,66 @@
 namespace Advent2023;
 
+struct CacheKey
+{
+    public string Row;
+    public int[] Groups;
+}
 sealed class Condition
 {
     string _row;
     int[] _groups;
-    static int nConditions;
-    public Condition(string line)
+    Dictionary<CacheKey, int> _cache;
+    public Condition(string line, Dictionary<CacheKey, int> cache)
     {
         Debug(0, "##################################################");
         var spaceSplit = line.Split(' ');
         _row = spaceSplit[0];
         _groups = [.. from num in spaceSplit[1].Split(',')
                       select Int32.Parse(num)];
-        nConditions++;        
+        _cache = cache;
     }
     private static void Debug(int indent, string line)
     {
-        return;
         Console.Write(String.Concat(from i in Enumerable.Range(0, indent) select "  "));
         Console.WriteLine(line);
     }
-    public static int Possible(string row, int[] groups, int indent)
+    public int Possible(string row, int[] groups, int indent)
     {
-        
+        CacheKey cacheKey = new() { Row = row, Groups = groups };
         Debug(indent, $"Possible('{row}', [{String.Join(',', groups)}])");
-        if (row.Length < groups.Sum() + groups.Length - 1)
-        {
-            Debug(indent, "remaining row shorter than groups, returning 0");
-            return 0;
-        }
+        // foreach (var kv in _cache)
+        // {
+        //     Console.WriteLine($"Cache[{kv.Key.Row},[{String.Join(", ", kv.Key.Groups)}]] = {kv.Value}");
+        // }
+        // Console.WriteLine();
         if (row.Length == 0 && groups.Length == 0)
         {
             Debug(indent, "both row and group empty, returning 1");
             return 1;
         }
+        if (_cache.TryGetValue(cacheKey, out int cached))
+        {
+            Debug(0, $"<'{row}', [{String.Join(", ", groups)}]> returning cached value {cached}");
+            return cached;
+        }
+        if (row.Length < groups.Sum() + groups.Length - 1)
+        {
+            Debug(indent, "remaining row shorter than groups, returning 0");
+            _cache[cacheKey] = 0;
+            return 0;
+        }
+        if (row.Length == 0 && groups.Length == 0)
+        {
+            Debug(indent, "both row and group empty, returning 1");
+            _cache[cacheKey] = 1;
+            return 1;
+        }
         if (row[0] == '.')
         {
             Debug(indent, "looking at '.'");
-            return Possible(row[1..], groups, indent + 1);
+            int res = Possible(row[1..], groups, indent + 1);
+            _cache[cacheKey] = res;
+            return res;
         }
         if (row[0] == '#')
         {
@@ -45,6 +68,7 @@ sealed class Condition
             if (groups.Length == 0)
             {
                 Debug(indent, "no groups, returning 0");
+                _cache[cacheKey] = 0;
                 return 0;
             }
             for (int i = 0; i < groups[0]; i++)
@@ -52,25 +76,31 @@ sealed class Condition
                 if (row[i] == '.')
                 {
                     Debug(indent, "found '.', returning 0");
+                    _cache[cacheKey] = 0;
                     return 0;
                 }
             }
             if (row.Length > groups[0] && row[groups[0]] == '#')
             {
                 Debug(indent, "found '#' after group, returning 0");
+                _cache[cacheKey] = 0;
                 return 0;
             }
             if (row.Length == groups[0] && groups.Length == 1)
             {
                 Debug(indent, "end of row, returning 1");
+                _cache[cacheKey] = 1;
                 return 1;
             }
             if (groups.Length > 0)
             {
                 Debug(indent, "recursing");
-                return Possible(row[(groups[0] + 1)..], groups[1..], indent + 1);
+                int res = Possible(row[(groups[0] + 1)..], groups[1..], indent + 1);
+                _cache[cacheKey] = res;
+                return res;
             }
             Debug(indent, "end, returning 1");
+            _cache[cacheKey] = 1;
             return 1;
         }
         if (row[0] == '?')
@@ -115,9 +145,11 @@ sealed class Condition
             // Assume .
             nPoss += Possible(row[1..], groups, indent + 1);
             Debug(indent, $"? returning {nPoss}");
+            _cache[cacheKey] = nPoss;
             return nPoss;
         }
         Debug(indent, "end, returning 1");
+        _cache[cacheKey] = 1;
         return 1;
     }
     private static IEnumerable<string> Possibilities(string row)
@@ -125,7 +157,7 @@ sealed class Condition
         IEnumerable<string> poss = [""];
         foreach (char c in row)
         {
-            if (c == '.' || c == '#') 
+            if (c == '.' || c == '#')
             {
                 poss = from p in poss select p + c;
             }
@@ -230,7 +262,7 @@ sealed class Condition
                     }
                 }
             }
-            
+
         }
         Debug(indent, $"returning {possible}\n");
         return possible;
@@ -265,10 +297,12 @@ public static class Day12HotSprings
 {
     public static Int128 SumPossibleArrangements(string filename)
     {
-        return (from line in File.ReadAllLines(filename).AsParallel() select new Condition(line).PossibleArrangements()).Sum();
+        Dictionary<CacheKey, int> cache = [];
+        return (from line in File.ReadAllLines(filename) select new Condition(line, cache).PossibleArrangements()).Sum();
     }
     public static Int128 SumUnfoldedArrangements(string filename)
     {
-        return (from line in File.ReadAllLines(filename).AsParallel() select new Condition(line).Unfold().PossibleArrangements()).Sum();
+        Dictionary<CacheKey, int> cache = [];
+        return (from line in File.ReadAllLines(filename) select new Condition(line, cache).Unfold().PossibleArrangements()).Sum();
     }
 }

@@ -2,12 +2,12 @@ using System.Reflection.Emit;
 
 namespace Advent2023;
 
-class Hash(string data)
+sealed class Hash(string data)
 {
     public int Value { get; } = data.Aggregate(0, (acc, c) => ((acc + c) * 17) % 256);
 }
 
-struct Lens 
+struct Lens
 {
     public string Label;
     public int FocalLength;
@@ -18,10 +18,10 @@ struct Lens
     }
 }
 
-class LensMap
+sealed class LensMap
 {
     Dictionary<int, List<Lens>> _map = [];
-    
+
 
     public void Remove(string label)
     {
@@ -67,7 +67,7 @@ class LensMap
     }
     public int FocusingPower()
     {
-        return (from kv in _map 
+        return (from kv in _map
                 select (kv.Key + 1) * (from pair in Enumerable.Range(0, kv.Value.Count).Zip(kv.Value)
                                        select (pair.First + 1) * pair.Second.FocalLength).Sum()).Sum();
     }
@@ -77,11 +77,12 @@ public static class Day15LensLibrary
     private static IEnumerable<string> ReadFile(string filename)
     {
         return from line in File.ReadAllLines(filename)
-               from step in line.Split(',') select step;
+               from step in line.Split(',')
+               select step;
     }
     public static int HashFile(string filename)
     {
-        return (from step in ReadFile(filename) 
+        return (from step in ReadFile(filename)
                 select new Hash(step).Value).Sum();
     }
     public static int FocusingPower(string filename)
@@ -96,7 +97,7 @@ public static class Day15LensLibrary
             else
             {
                 var split = step.Split('=');
-                map.Add(new Lens() {Label = split[0], FocalLength = Int32.Parse(split[1]) });
+                map.Add(new Lens() { Label = split[0], FocalLength = Int32.Parse(split[1]) });
             }
         }
         return map.FocusingPower();

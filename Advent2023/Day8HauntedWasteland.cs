@@ -62,24 +62,12 @@ public static class Day8HauntedWasteland
         }
         return steps;
     }
-    private static long Gcd(long a, long b)
-    {
-        if (b == 0)
-        {
-            return a;
-        }
-        return Gcd(b, a % b);
-    }
-    private static long Lcm(long a, long b)
-    {
-        return a * (b / Gcd(a, b));
-    }
     public static long NumberOfStepsParallel(string filename)
     {
         DesertMap map = new(filename);
         return (from node in map.Network.Keys
                 where node[2] == 'A'
                 select map.LoopLength(node))
-               .Aggregate(1L, (multiple, loop) => Lcm(loop, multiple));
+               .Aggregate(1L, (multiple, loop) => Mathematics.Lcm(loop, multiple));
     }
 }

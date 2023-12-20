@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 
 namespace Advent2023;
-class PatternNote
+sealed class PatternNote
 {
     string[] _rows;
     public PatternNote(IEnumerable<string> rows)
@@ -145,7 +145,7 @@ public static class Day13PointOfIncidence
     {
         return (from note in ReadFile(filename) select note.Summary()).Sum();
     }
-        public static int SumPatternNotesSmudge(string filename)
+    public static int SumPatternNotesSmudge(string filename)
     {
         return (from note in ReadFile(filename) select note.SummarySmudge()).Sum();
     }

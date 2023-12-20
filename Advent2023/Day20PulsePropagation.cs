@@ -13,7 +13,7 @@ enum PulseType
     Low,
     High,
 }
-class Pulse
+sealed class Pulse
 {
     public PulseType Type { get; }
     public string Source { get; }

@@ -1,5 +1,5 @@
 namespace Advent2023;
-class Platform(string filename)
+sealed class Platform(string filename)
 {
     public char[][] Rows { get; } = (from line in File.ReadAllLines(filename)
                                      select line.ToArray()).ToArray();
