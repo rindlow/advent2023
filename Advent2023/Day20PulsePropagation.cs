@@ -100,24 +100,16 @@ class PulseModule
         }
         if (_moduleType == ModuleType.Conjunction)
         {
-            // if (buttonPress > 0 && _watchList.Contains(Name))
-            // {
-            //     Console.WriteLine($"{buttonPress}: {Name} got {pulse.Type} from {pulse.Source}");
-            // }
             _inputs[pulse.Source] = pulse.Type;
             if (_inputs.Values.All(p => p == PulseType.High))
             {
                 if (buttonPress > 0 && _watchList.Contains(Name))
                 {
-                    Console.WriteLine($"{buttonPress}: {Name} emitting Low (last {_lastLow[Name]}, n = {buttonPress - _lastLow[Name]})");
+                    // Console.WriteLine($"{buttonPress}: {Name} emitting Low (last {_lastLow[Name]}, n = {buttonPress - _lastLow[Name]})");
                     _lastLow[Name] = buttonPress;
                 }     
                 return from destination in Destinations select new Pulse(PulseType.Low, Name, destination);
-            }
-            // if (buttonPress > 0 && _watchList.Contains(Name))
-            // {
-            //     Console.WriteLine($"{buttonPress}: {Name} emitting High");
-            // }        
+            }     
             return from destination in Destinations select new Pulse(PulseType.High, Name, destination);
         }
         return [];
@@ -189,7 +181,7 @@ class PulseNetwork
         }
         return false;
     }
-    public string GraphViz() {
+    public void GraphViz() {
         StringBuilder stringBuilder = new();
         stringBuilder.AppendLine("digraph G {");
         foreach (PulseModule pulseModule in _modules.Values)
@@ -197,7 +189,7 @@ class PulseNetwork
             stringBuilder.Append(pulseModule.GraphViz());
         }
         stringBuilder.AppendLine("}");
-        return stringBuilder.ToString();
+        File.WriteAllText("day20.gv", stringBuilder.ToString());
     }
 }
 public static class Day20PulsePropagation
