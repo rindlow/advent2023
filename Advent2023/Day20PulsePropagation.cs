@@ -32,14 +32,14 @@ class Pulse
     }
     public static void ResetCounter()
     {
-        _sent = new() {{ PulseType.High, 0}, {PulseType.Low, 0}};
+        _sent = new() { { PulseType.High, 0 }, { PulseType.Low, 0 } };
     }
     public static long CounterProduct()
     {
         return _sent[PulseType.Low] * _sent[PulseType.High];
     }
 }
-class PulseModule
+sealed class PulseModule
 {
     public string Name { get; }
     public string[] Destinations { get; }
@@ -87,13 +87,13 @@ class PulseModule
     {
         _inputs[input] = PulseType.Low;
     }
-    public IEnumerable<Pulse> Forward(Pulse pulse, int buttonPress) 
+    public IEnumerable<Pulse> Forward(Pulse pulse, int buttonPress)
     {
         if (_moduleType == ModuleType.Broadcaster)
         {
             return from destination in Destinations select new Pulse(pulse.Type, Name, destination);
         }
-        if (_moduleType == ModuleType.Flipflop && pulse.Type == PulseType.Low) 
+        if (_moduleType == ModuleType.Flipflop && pulse.Type == PulseType.Low)
         {
             PulseType output = Flip();
             return from destination in Destinations select new Pulse(output, Name, destination);
@@ -107,9 +107,9 @@ class PulseModule
                 {
                     // Console.WriteLine($"{buttonPress}: {Name} emitting Low (last {_lastLow[Name]}, n = {buttonPress - _lastLow[Name]})");
                     _lastLow[Name] = buttonPress;
-                }     
+                }
                 return from destination in Destinations select new Pulse(PulseType.Low, Name, destination);
-            }     
+            }
             return from destination in Destinations select new Pulse(PulseType.High, Name, destination);
         }
         return [];
@@ -121,7 +121,8 @@ class PulseModule
         {
             ModuleType.Broadcaster => "box",
             ModuleType.Flipflop => "invtriangle",
-            ModuleType.Conjunction => "ellipse"
+            ModuleType.Conjunction => "ellipse",
+            _ => throw new NotImplementedException(),
         };
         stringBuilder.AppendLine($"  {Name} [shape={shape}]");
         foreach (string dest in Destinations)
@@ -135,7 +136,7 @@ class PulseModule
         return _lastLow.Values.Aggregate(1L, Mathematics.Lcm);
     }
 }
-class PulseNetwork
+sealed class PulseNetwork
 {
     Dictionary<string, PulseModule> _modules = [];
     public PulseNetwork(string filename)
@@ -150,7 +151,7 @@ class PulseNetwork
         {
             foreach (string destination in module.Destinations)
             {
-                if (_modules.TryGetValue(destination, out PulseModule pulseModule))
+                if (_modules.TryGetValue(destination, out PulseModule? pulseModule))
                 {
                     pulseModule.AddInput(module.Name);
                 }
@@ -181,7 +182,8 @@ class PulseNetwork
         }
         return false;
     }
-    public void GraphViz() {
+    public void GraphViz()
+    {
         StringBuilder stringBuilder = new();
         stringBuilder.AppendLine("digraph G {");
         foreach (PulseModule pulseModule in _modules.Values)
