@@ -9,7 +9,7 @@ namespace Advent2023;
 sealed class TrailNode
 {
     public List<Position> Positions { get; set; } = [];
-    public HashSet<TrailNode> Edges { get; set; }= [];
+    public HashSet<TrailNode> Edges { get; set; } = [];
     public int Label { get; }
     private static int _labelIndex;
     public TrailNode(Position pos)
@@ -52,7 +52,7 @@ sealed class Trails
             }
             Console.WriteLine();
         }
-        
+
     }
     private List<Position> Neighbours(Position pos)
     {
@@ -64,7 +64,7 @@ sealed class Trails
         if (pos.Row < _map.Length - 1 && _map[pos.Row + 1][pos.Col] != '#')
         {
             neighbours.Add(new Position(pos.Row + 1, pos.Col));
-        }       
+        }
         if (pos.Col > 0 && _map[pos.Row][pos.Col - 1] != '#')
         {
             neighbours.Add(new Position(pos.Row, pos.Col - 1));
@@ -130,8 +130,8 @@ sealed class Trails
                     currentNode.Edges.Clear();
                 }
             }
-            IEnumerable<Position> neighbours = from n in Neighbours(current) 
-                                               where n != lastPos && !currentNode.Positions.Contains(n) 
+            IEnumerable<Position> neighbours = from n in Neighbours(current)
+                                               where n != lastPos && !currentNode.Positions.Contains(n)
                                                select n;
             switch (neighbours.Count())
             {
@@ -248,8 +248,8 @@ sealed class Trails
                            where node.Positions.Contains(_start)
                            select node).First();
         TrailNode end = (from node in graph
-                           where node.Positions.Contains(_end)
-                           select node).First();  
+                         where node.Positions.Contains(_end)
+                         select node).First();
         queue.Enqueue(start);
         longest[start] = -1;
         while (queue.Count > 0)
@@ -304,8 +304,8 @@ sealed class Trails
                            where node.Positions.Contains(_start)
                            select node).First();
         TrailNode end = (from node in graph
-                           where node.Positions.Contains(_end)
-                           select node).First();  
+                         where node.Positions.Contains(_end)
+                         select node).First();
         return LongestRec(start, end, [], "") - 1;
     }
 }
