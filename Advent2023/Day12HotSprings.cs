@@ -10,7 +10,7 @@ sealed class Condition
 {
     string _row;
     int[] _groups;
-    Dictionary<CacheKey, long> _cache;
+    readonly Dictionary<CacheKey, long> _cache;
     public Condition(string line)
     {
         var spaceSplit = line.Split(' ');
