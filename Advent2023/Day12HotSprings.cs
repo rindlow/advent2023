@@ -60,7 +60,7 @@ sealed class Condition
     }
     public long PossibleArrangements()
     {
-        return  Possible(_row, _groups, 0);
+        return Possible(_row, _groups, 0);
     }
     public Condition Unfold()
     {
@@ -73,7 +73,7 @@ public static class Day12HotSprings
 {
     public static Int128 SumPossibleArrangements(string filename)
     {
-        return (from line in File.ReadAllLines(filename) 
+        return (from line in File.ReadAllLines(filename)
                 select new Condition(line).PossibleArrangements()).Sum();
     }
     public static Int128 SumUnfoldedArrangements(string filename)
