@@ -17,7 +17,7 @@ sealed class WiringDiagram
         {
             string[] split = line.Split(": ");
             foreach (string target in split[1].Split(' '))
-            {    
+            {
                 Add(split[0], target);
             }
         }
@@ -37,7 +37,7 @@ sealed class WiringDiagram
         }
         else
         {
-            _wires[src] = [ dst ];
+            _wires[src] = [dst];
         }
         if (_wires.TryGetValue(dst, out List<string>? rValue))
         {
@@ -45,7 +45,7 @@ sealed class WiringDiagram
         }
         else
         {
-            _wires[dst] = [ src ];
+            _wires[dst] = [src];
         }
     }
     int GraphSize(string start)

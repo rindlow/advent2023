@@ -126,7 +126,8 @@ public static class Day24NeverTellMeTheOdds
         {
             foreach (int i in Enumerable.Range(0, t.Length - step))
             {
-                var tDiff = from a in t[i] from b in t[i + step] 
+                var tDiff = from a in t[i]
+                            from b in t[i + step]
                             select a.Diff(b).DividedBy(step)?.ToString();
                 foreach (string diff in tDiff)
                 {
@@ -143,7 +144,7 @@ public static class Day24NeverTellMeTheOdds
                         diffs[diff] = 1;
                     }
                 }
-            } 
+            }
         }
         var maxHits = diffs.Values.Where(x => x < n - 1).Max();
         var maxString = diffs.First(kv => kv.Value == maxHits).Key;
@@ -154,7 +155,8 @@ public static class Day24NeverTellMeTheOdds
         }
         foreach (int i in Enumerable.Range(0, t.Length - 1))
         {
-            var tDiff = from a in t[i] from b in t[i + 1] 
+            var tDiff = from a in t[i]
+                        from b in t[i + 1]
                         select a.Diff(b).ToString();
             // Console.WriteLine($"{String.Join(", ", tDiff)}");
             foreach (var (First, Second) in tDiff.Zip(Enumerable.Range(0, tDiff.Count())))
@@ -177,7 +179,7 @@ public static class Day24NeverTellMeTheOdds
                 }
             }
         }
-        
+
         foreach (var kv in diffs)
         {
             if (kv.Value > 1 && kv.Value < n - 1)
